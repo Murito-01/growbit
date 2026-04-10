@@ -7,10 +7,13 @@ This project is created as part of my portfolio to demonstrate mobile developmen
 
 ## ✨ Features
 
-- [ ] Add new habit
-- [ ] Mark habit as done
-- [ ] Daily habit tracking
-- [ ] Simple and clean UI
+- [x] Add new habit  
+- [x] Mark habit as done  
+- [x] Daily habit tracking  
+- [x] Simple and clean UI  
+- [x] XP system (gain XP when completing habits)  
+- [x] Level system based on XP  
+- [x] Feedback system (Snackbar when gaining XP)
 
 ---
 
@@ -33,10 +36,12 @@ To build a clean, scalable habit tracker app.
 ```bash
 lib/
 ├── main.dart
-├── screens/
-├── widgets/
 ├── models/
-├── services/
+│   ├── habit.dart
+│   └── user_progress.dart
+├── screens/
+│   └── home_screen.dart
+├── widgets/
 ```
 
 ---
@@ -47,11 +52,15 @@ lib/
 - Flutter environment setup
 - Project initialization
 - App running on emulator
+- Habit list (add & toggle)
+- XP & Level system
+- User feedback (Snackbar)
 
 ⏳ In Progress / TODO:
-- Create base UI structure
-- Implement habit list
-- Add state management
+- Improve UI/UX design
+- Refactor into reusable widgets
+- Add habit persistence (local storage)
+- Add streak system
 
 ---
 
