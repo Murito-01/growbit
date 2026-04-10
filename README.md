@@ -30,12 +30,14 @@ To build a clean, scalable habit tracker app.
 
 ## 📁 Project Structure
 
+```bash
 lib/
 ├── main.dart
 ├── screens/
 ├── widgets/
 ├── models/
 ├── services/
+```
 
 ---
 
