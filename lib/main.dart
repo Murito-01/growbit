@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   runApp(const GrowbitApp());
@@ -12,7 +13,7 @@ class GrowbitApp extends StatelessWidget {
     return MaterialApp(
       title: 'Growbit',
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const HomeScreen(),
     );
   }
 }
