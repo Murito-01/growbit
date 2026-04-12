@@ -18,11 +18,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    loadHabits();
-    loadUserProgress();
+    loadInitialData();
   }
 
-  // 🔹 Load data saat app dibuka
+  Future<void> loadInitialData() async {
+    await loadHabits();
+    await loadUserProgress();
+    await checkDailyReset();
+  }
+
   Future<void> loadHabits() async {
     final data = await LocalStorageService.loadHabits();
     setState(() {
@@ -30,12 +34,42 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // 🔹 Simpan data setiap berubah
+  Future<void> loadUserProgress() async {
+    final data = await LocalStorageService.loadUserProgress();
+    setState(() {
+      userProgress.xp = data['xp']!;
+      userProgress.level = data['level']!;
+    });
+  }
+
   Future<void> saveHabits() async {
     await LocalStorageService.saveHabits(habits);
   }
 
-  // 🔹 Tambah habit
+  Future<void> checkDailyReset() async {
+    final lastReset = await LocalStorageService.loadLastResetDate();
+    final now = DateTime.now();
+
+    if (lastReset == null || !isSameDay(lastReset, now)) {
+      setState(() {
+        for (var habit in habits) {
+          habit.isDone = false;
+        }
+      });
+
+      await LocalStorageService.saveLastResetDate(now);
+      await saveHabits();
+    }
+  }
+
+  bool isSameDay(DateTime? date1, DateTime date2) {
+    if (date1 == null) return false;
+
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
   void addHabit(String title) {
     setState(() {
       habits.add(Habit(title: title));
@@ -43,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
     saveHabits();
   }
 
-  // 🔹 Toggle habit + XP
   void toggleHabit(int index) {
     final habit = habits[index];
     final now = DateTime.now();
@@ -52,7 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
       habit.isDone = !habit.isDone;
 
       if (habit.isDone) {
-        // ❗ Cek apakah sudah pernah dapat XP hari ini
         if (!isSameDay(habit.lastCompletedDate, now)) {
           userProgress.addXP(10);
           habit.lastCompletedDate = now;
@@ -71,7 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
     LocalStorageService.saveUserProgress(userProgress.xp, userProgress.level);
   }
 
-  // 🔹 Dialog tambah habit
   void showAddHabitDialog() {
     final TextEditingController controller = TextEditingController();
 
@@ -102,7 +133,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 🔹 UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,10 +150,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // 🔥 BODY UTAMA
       body: Column(
         children: [
-          // 🔹 DEBUG XP (sementara, nanti bisa dihapus)
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -131,16 +159,9 @@ class _HomeScreenState extends State<HomeScreen> {
               style: const TextStyle(fontSize: 16),
             ),
           ),
-
-          // 🔹 LIST HABIT
           Expanded(
             child: habits.isEmpty
-                ? const Center(
-                    child: Text(
-                      "No habits yet",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  )
+                ? const Center(child: Text("No habits yet"))
                 : ListView.builder(
                     itemCount: habits.length,
                     itemBuilder: (context, index) {
@@ -159,22 +180,5 @@ class _HomeScreenState extends State<HomeScreen> {
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  Future<void> loadUserProgress() async {
-    final data = await LocalStorageService.loadUserProgress();
-
-    setState(() {
-      userProgress.xp = data['xp']!;
-      userProgress.level = data['level']!;
-    });
-  }
-
-  bool isSameDay(DateTime? date1, DateTime date2) {
-    if (date1 == null) return false;
-
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
   }
 }

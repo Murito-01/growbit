@@ -40,4 +40,20 @@ class LocalStorageService {
 
     return {'xp': xp, 'level': level};
   }
+
+  static const String lastResetKey = 'last_reset_date';
+
+  static Future<void> saveLastResetDate(DateTime date) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(lastResetKey, date.toIso8601String());
+  }
+
+  static Future<DateTime?> loadLastResetDate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final dateString = prefs.getString(lastResetKey);
+
+    if (dateString == null) return null;
+
+    return DateTime.parse(dateString);
+  }
 }
