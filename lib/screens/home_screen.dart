@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/habit.dart';
 import '../models/user_progress.dart';
+import '../services/local_storage_service.dart';
+import '../widgets/habit_item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,29 +15,46 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Habit> habits = [];
   UserProgress userProgress = UserProgress();
 
+  @override
+  void initState() {
+    super.initState();
+    loadHabits();
+  }
+
+  // 🔹 Load data saat app dibuka
+  Future<void> loadHabits() async {
+    final data = await LocalStorageService.loadHabits();
+    setState(() {
+      habits = data;
+    });
+  }
+
+  // 🔹 Simpan data setiap berubah
+  Future<void> saveHabits() async {
+    await LocalStorageService.saveHabits(habits);
+  }
+
+  // 🔹 Tambah habit
   void addHabit(String title) {
     setState(() {
       habits.add(Habit(title: title));
     });
+    saveHabits();
   }
 
+  // 🔹 Toggle habit + XP
   void toggleHabit(int index) {
     setState(() {
       habits[index].isDone = !habits[index].isDone;
 
       if (habits[index].isDone) {
         userProgress.addXP(10);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("+10 XP 🎉"),
-            duration: Duration(seconds: 1),
-          ),
-        );
       }
     });
+    saveHabits();
   }
 
+  // 🔹 Dialog tambah habit
   void showAddHabitDialog() {
     final TextEditingController controller = TextEditingController();
 
@@ -49,9 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             child: const Text("Cancel"),
           ),
           ElevatedButton(
@@ -68,6 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // 🔹 UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,21 +102,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+
+      // 🔥 BODY UTAMA
       body: habits.isEmpty
-          ? const Center(child: Text("No habits yet"))
+          ? const Center(
+              child: Text("No habits yet", style: TextStyle(fontSize: 16)),
+            )
           : ListView.builder(
               itemCount: habits.length,
               itemBuilder: (context, index) {
-                final habit = habits[index];
-                return ListTile(
-                  title: Text(habit.title),
-                  leading: Checkbox(
-                    value: habit.isDone,
-                    onChanged: (_) => toggleHabit(index),
-                  ),
+                return HabitItem(
+                  habit: habits[index],
+                  onToggle: () => toggleHabit(index),
                 );
               },
             ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: showAddHabitDialog,
         child: const Icon(Icons.add),
