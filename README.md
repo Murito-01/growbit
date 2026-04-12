@@ -10,10 +10,8 @@ This project is created as part of my portfolio to demonstrate mobile developmen
 - [x] Add new habit  
 - [x] Mark habit as done  
 - [x] Daily habit tracking  
-- [x] Simple and clean UI  
 - [x] XP system (gain XP when completing habits)  
-- [x] Level system based on XP  
-- [x] Feedback system (Snackbar when gaining XP)
+- [x] Local data persistence (using shared_preferences)
 
 ---
 
@@ -21,6 +19,7 @@ This project is created as part of my portfolio to demonstrate mobile developmen
 
 - Flutter
 - Dart
+- Shared Preferences (Local Storage)
 - Android Emulator
 
 ---
@@ -42,6 +41,9 @@ lib/
 ├── screens/
 │   └── home_screen.dart
 ├── widgets/
+│   └── habit_item.dart
+├── services/
+│   └── local_storage_service.dart
 ```
 
 ---
@@ -52,15 +54,15 @@ lib/
 - Flutter environment setup
 - Project initialization
 - App running on emulator
-- Habit list (add & toggle)
-- XP & Level system
-- User feedback (Snackbar)
+- Add & toggle habit
+- XP system implemented
+- Data persistence using local storage
 
 ⏳ In Progress / TODO:
 - Improve UI/UX design
-- Refactor into reusable widgets
-- Add habit persistence (local storage)
-- Add streak system
+- Persist XP & level
+- Add habit history tracking
+- Refactor state management
 
 ---
 
