@@ -57,10 +57,13 @@ lib/
 - Add & toggle habit
 - XP system implemented
 - Data persistence using local storage
+- Persistent XP & level system
+- Anti XP farming system
+- Daily reset system
 
 ⏳ In Progress / TODO:
 - Improve UI/UX design
-- Persist XP & level
+- Progress bar for XP
 - Add habit history tracking
 - Refactor state management
 
