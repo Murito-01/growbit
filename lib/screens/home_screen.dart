@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     loadHabits();
+    loadUserProgress();
   }
 
   // 🔹 Load data saat app dibuka
@@ -44,14 +45,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 🔹 Toggle habit + XP
   void toggleHabit(int index) {
-    setState(() {
-      habits[index].isDone = !habits[index].isDone;
+    final habit = habits[index];
+    final now = DateTime.now();
 
-      if (habits[index].isDone) {
-        userProgress.addXP(10);
+    setState(() {
+      habit.isDone = !habit.isDone;
+
+      if (habit.isDone) {
+        // ❗ Cek apakah sudah pernah dapat XP hari ini
+        if (!isSameDay(habit.lastCompletedDate, now)) {
+          userProgress.addXP(10);
+          habit.lastCompletedDate = now;
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("+10 XP 🎉"),
+              duration: Duration(seconds: 1),
+            ),
+          );
+        }
       }
     });
+
     saveHabits();
+    LocalStorageService.saveUserProgress(userProgress.xp, userProgress.level);
   }
 
   // 🔹 Dialog tambah habit
@@ -104,24 +121,60 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
       // 🔥 BODY UTAMA
-      body: habits.isEmpty
-          ? const Center(
-              child: Text("No habits yet", style: TextStyle(fontSize: 16)),
-            )
-          : ListView.builder(
-              itemCount: habits.length,
-              itemBuilder: (context, index) {
-                return HabitItem(
-                  habit: habits[index],
-                  onToggle: () => toggleHabit(index),
-                );
-              },
+      body: Column(
+        children: [
+          // 🔹 DEBUG XP (sementara, nanti bisa dihapus)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Level ${userProgress.level} • XP: ${userProgress.xp}",
+              style: const TextStyle(fontSize: 16),
             ),
+          ),
+
+          // 🔹 LIST HABIT
+          Expanded(
+            child: habits.isEmpty
+                ? const Center(
+                    child: Text(
+                      "No habits yet",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: habits.length,
+                    itemBuilder: (context, index) {
+                      return HabitItem(
+                        habit: habits[index],
+                        onToggle: () => toggleHabit(index),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: showAddHabitDialog,
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Future<void> loadUserProgress() async {
+    final data = await LocalStorageService.loadUserProgress();
+
+    setState(() {
+      userProgress.xp = data['xp']!;
+      userProgress.level = data['level']!;
+    });
+  }
+
+  bool isSameDay(DateTime? date1, DateTime date2) {
+    if (date1 == null) return false;
+
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }
