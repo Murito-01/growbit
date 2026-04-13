@@ -152,16 +152,49 @@ class _HomeScreenState extends State<HomeScreen> {
 
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Level ${userProgress.level} • XP: ${userProgress.xp}",
-              style: const TextStyle(fontSize: 16),
+          // 🔥 HEADER (XP + LEVEL)
+          Container(
+            width: double.infinity,
+            margin: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Your Progress",
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Level ${userProgress.level}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "XP: ${userProgress.xp}",
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ],
             ),
           ),
+
+          // 🔥 LIST HABIT
           Expanded(
             child: habits.isEmpty
-                ? const Center(child: Text("No habits yet"))
+                ? const Center(
+                    child: Text(
+                      "No habits yet.\nStart building your routine 💪",
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 : ListView.builder(
                     itemCount: habits.length,
                     itemBuilder: (context, index) {

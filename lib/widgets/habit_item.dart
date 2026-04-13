@@ -9,14 +9,57 @@ class HabitItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        habit.title,
-        style: TextStyle(
-          decoration: habit.isDone ? TextDecoration.lineThrough : null,
-        ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: habit.isDone ? Colors.green[50] : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
-      leading: Checkbox(value: habit.isDone, onChanged: (_) => onToggle()),
+      child: Row(
+        children: [
+          // 🔥 Checkbox
+          GestureDetector(
+            onTap: onToggle,
+            child: Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: habit.isDone ? Colors.green : Colors.transparent,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: habit.isDone ? Colors.green : Colors.grey,
+                  width: 2,
+                ),
+              ),
+              child: habit.isDone
+                  ? const Icon(Icons.check, color: Colors.white, size: 18)
+                  : null,
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          // 🔥 Title
+          Expanded(
+            child: Text(
+              habit.title,
+              style: TextStyle(
+                fontSize: 16,
+                decoration: habit.isDone ? TextDecoration.lineThrough : null,
+                color: habit.isDone ? Colors.grey : Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
