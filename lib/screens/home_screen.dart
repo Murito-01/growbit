@@ -15,6 +15,8 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Habit> habits = [];
   UserProgress userProgress = UserProgress();
 
+  final int xpPerLevel = 100;
+
   @override
   void initState() {
     super.initState();
@@ -135,24 +137,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Growbit"),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(30),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "Level ${userProgress.level} • XP: ${userProgress.xp}",
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
-      ),
+    double progress = (userProgress.xp % xpPerLevel) / xpPerLevel;
 
+    return Scaffold(
+      appBar: AppBar(title: const Text("Growbit")),
       body: Column(
         children: [
-          // 🔥 HEADER (XP + LEVEL)
+          // 🔥 HEADER
           Container(
             width: double.infinity,
             margin: const EdgeInsets.all(12),
@@ -181,6 +172,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text(
                   "XP: ${userProgress.xp}",
                   style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+
+                const SizedBox(height: 12),
+
+                // 🔥 PROGRESS BAR
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 8,
+                    backgroundColor: Colors.white24,
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      Colors.white,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                // 🔹 OPTIONAL TEXT
+                Text(
+                  "${userProgress.xp % xpPerLevel}/$xpPerLevel XP",
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
                 ),
               ],
             ),
