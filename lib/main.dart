@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'providers/habit_provider.dart';
 import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const GrowbitApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => HabitProvider()..init(),
+      child: const GrowbitApp(),
+    ),
+  );
 }
 
 class GrowbitApp extends StatelessWidget {
