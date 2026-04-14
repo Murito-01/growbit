@@ -9,9 +9,13 @@ class HabitItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       padding: const EdgeInsets.all(12),
+      transform: habit.isDone
+          ? (Matrix4.identity()..scale(1.02))
+          : Matrix4.identity(),
       decoration: BoxDecoration(
         color: habit.isDone ? Colors.green[50] : Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -25,10 +29,11 @@ class HabitItem extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // 🔥 Checkbox
+          // 🔥 Checkbox dengan animasi
           GestureDetector(
             onTap: onToggle,
-            child: Container(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
               width: 28,
               height: 28,
               decoration: BoxDecoration(
@@ -39,9 +44,21 @@ class HabitItem extends StatelessWidget {
                   width: 2,
                 ),
               ),
-              child: habit.isDone
-                  ? const Icon(Icons.check, color: Colors.white, size: 18)
-                  : null,
+              child: Center(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  transitionBuilder: (child, animation) =>
+                      ScaleTransition(scale: animation, child: child),
+                  child: habit.isDone
+                      ? const Icon(
+                          Icons.check,
+                          key: ValueKey(true),
+                          color: Colors.white,
+                          size: 18,
+                        )
+                      : const SizedBox(key: ValueKey(false)),
+                ),
+              ),
             ),
           ),
 
@@ -49,13 +66,14 @@ class HabitItem extends StatelessWidget {
 
           // 🔥 Title
           Expanded(
-            child: Text(
-              habit.title,
+            child: AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 200),
               style: TextStyle(
                 fontSize: 16,
                 decoration: habit.isDone ? TextDecoration.lineThrough : null,
                 color: habit.isDone ? Colors.grey : Colors.black,
               ),
+              child: Text(habit.title),
             ),
           ),
         ],
