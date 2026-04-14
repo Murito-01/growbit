@@ -1,33 +1,33 @@
-# 🚀 Growbit
+<div align="center">
 
-Growbit is a simple habit tracker mobile application built with Flutter.  
-This project is created as part of my portfolio to demonstrate mobile development skills and consistent product building.
+# 🌱 Growbit
+
+**Growbit** is a simple, intuitive habit tracker mobile application built with Flutter.  
+Designed to help you build better habits through gamification and consistency.
+
+[![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev/)
+
+</div>
 
 ---
 
 ## ✨ Features
 
-- [x] Add new habit  
-- [x] Mark habit as done  
-- [x] Daily habit tracking  
-- [x] XP system (gain XP when completing habits)  
-- [x] Local data persistence (using shared_preferences)
+- **Habit Management**: Easily add and track your daily habits.
+- **Daily Tracking**: Mark habits as done for the day and get visual feedback.
+- **Gamification (XP System)**: Gain Experience Points (XP) and level up as you complete your habits, keeping you motivated.
+- **Anti-Farming**: Smart daily reset system prevents XP farming and enforces true daily consistency.
+- **Data Persistence**: Your progress is safely saved locally so you never lose your streak.
 
 ---
 
 ## 🛠 Tech Stack
 
-- Flutter
-- Dart
-- Shared Preferences (Local Storage)
-- Android Emulator
-
----
-
-## 🎯 Goal
-
-To build a clean, scalable habit tracker app.
-
+- **Framework:** Flutter
+- **Language:** Dart
+- **State Management:** Provider
+- **Storage:** Shared Preferences (Local Storage)
 ---
 
 ## 📁 Project Structure
@@ -48,34 +48,29 @@ lib/
 
 ---
 
-## 🎯 Current Status
+## 🎯 Roadmap & Progress
 
-✅ Done:
-- Flutter environment setup
-- Project initialization
-- App running on emulator
-- Add & toggle habit
-- XP system implemented
-- Data persistence using local storage
-- Persistent XP & level system
-- Anti XP farming system
-- Daily reset system
+✅ **Completed:**
+- App initialization & core UI
+- Add & toggle habit functionality
+- XP & leveling system implementation
+- Data persistence with local storage
+- Anti XP farming & daily reset systems
 
-⏳ In Progress / TODO:
-- Improve UI/UX design
-- Progress bar for XP
-- Add habit history tracking
-- Refactor state management
+⏳ **Upcoming Features (TODO):**
+- Modernized UI/UX design & animations
+- Visual progress bar for XP
+- Detailed habit history & analytics tracking
 
 ---
 
 ## 📸 Preview
 
-*(Coming soon)*
+*(Coming soon - Screenshots of the app will be placed here)*
 
 ---
 
 ## 🤝 Contributing
 
-This is a personal project by Risto.
-Fork & PRs are welcome for learning purposes.
+This is a personal project by Risto, created to demonstrate mobile development skills.  
+Forks and Pull Requests are always welcome!
