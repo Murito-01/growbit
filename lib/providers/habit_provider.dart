@@ -39,7 +39,6 @@ class HabitProvider extends ChangeNotifier {
       for (var habit in habits) {
         habit.isDone = false;
       }
-
       await LocalStorageService.saveLastResetDate(now);
       await saveHabits();
       notifyListeners();
@@ -65,13 +64,28 @@ class HabitProvider extends ChangeNotifier {
 
     if (habit.isDone) {
       if (!isSameDay(habit.lastCompletedDate, now)) {
+        final oldLevel = userProgress.level;
         userProgress.addXP(10);
         habit.lastCompletedDate = now;
+        habit.completionHistory.add(now); // Record history
+
+        final newLevel = userProgress.level;
+        final isLevelUp = newLevel > oldLevel;
+
+        final message =
+            isLevelUp ? '🎉 Level Up! You\'re now Level $newLevel!' : '⚡ +10 XP gained!';
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("+10 XP 🎉"),
-            duration: Duration(seconds: 1),
+          SnackBar(
+            content: Text(
+              message,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            margin: const EdgeInsets.all(16),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
@@ -79,7 +93,6 @@ class HabitProvider extends ChangeNotifier {
 
     saveHabits();
     LocalStorageService.saveUserProgress(userProgress.xp, userProgress.level);
-
     notifyListeners();
   }
 }
