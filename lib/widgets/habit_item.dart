@@ -9,73 +9,112 @@ class HabitItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final streak = habit.currentStreak;
+
+    final cardBgColor = habit.isDone
+        ? (isDark ? const Color(0xFF1A2E1E) : const Color(0xFFDCFCE7))
+        : Theme.of(context).cardColor;
+
+    final checkboxFill =
+        habit.isDone ? Colors.green.shade400 : Colors.transparent;
+    final checkboxBorder =
+        habit.isDone ? Colors.green.shade400 : cs.outline;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      padding: const EdgeInsets.all(12),
-      transform: habit.isDone
-          ? (Matrix4.identity()..scale(1.02))
-          : Matrix4.identity(),
+      curve: Curves.easeOut,
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: habit.isDone ? Colors.green[50] : Colors.white,
+        color: cardBgColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.06),
+            blurRadius: 8,
             offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Row(
         children: [
-          // 🔥 Checkbox dengan animasi
+          // ── Animated Checkbox ────────────────────────────────────
           GestureDetector(
             onTap: onToggle,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 28,
-              height: 28,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOut,
+              width: 26,
+              height: 26,
               decoration: BoxDecoration(
-                color: habit.isDone ? Colors.green : Colors.transparent,
+                color: checkboxFill,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: habit.isDone ? Colors.green : Colors.grey,
-                  width: 2,
-                ),
+                border: Border.all(color: checkboxBorder, width: 2),
               ),
-              child: Center(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  transitionBuilder: (child, animation) =>
-                      ScaleTransition(scale: animation, child: child),
-                  child: habit.isDone
-                      ? const Icon(
-                          Icons.check,
-                          key: ValueKey(true),
-                          color: Colors.white,
-                          size: 18,
-                        )
-                      : const SizedBox(key: ValueKey(false)),
-                ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (child, anim) =>
+                    ScaleTransition(scale: anim, child: child),
+                child: habit.isDone
+                    ? const Icon(
+                        Icons.check_rounded,
+                        key: ValueKey(true),
+                        color: Colors.white,
+                        size: 16,
+                      )
+                    : const SizedBox(key: ValueKey(false)),
               ),
             ),
           ),
 
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
 
-          // 🔥 Title
+          // ── Habit Title ───────────────────────────────────────────
           Expanded(
             child: AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 250),
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
                 decoration: habit.isDone ? TextDecoration.lineThrough : null,
-                color: habit.isDone ? Colors.grey : Colors.black,
+                decorationColor: cs.onSurface.withOpacity(0.4),
+                color: habit.isDone
+                    ? cs.onSurface.withOpacity(0.4)
+                    : cs.onSurface,
               ),
               child: Text(habit.title),
             ),
           ),
+
+          // ── Streak Badge ─────────────────────────────────────────
+          if (streak > 0) ...[
+            const SizedBox(width: 8),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: Colors.orange.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('🔥', style: TextStyle(fontSize: 11)),
+                  const SizedBox(width: 2),
+                  Text(
+                    '$streak',
+                    style: const TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
